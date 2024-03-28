@@ -1,23 +1,26 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const routes = require("./src/router");
+const router = require("./src/router");
+const bodyParser = require("body-parser");
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 4000;
 
-routes(app);
+app.use(bodyParser.json());
+
+router(app);
 
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(`${process.env.MONGODB_URI}`)
   .then(() => {
-    console.log("Đã kết nối đến cơ sở dữ liệu MongoDB");
+    console.log("Connect DB success !");
   })
   .catch((err) => {
-    console.error("Lỗi kết nối đến cơ sở dữ liệu MongoDB:", err);
+    console.lof(err);
   });
 
 app.listen(port, () => {
-  console.log("Server đang chạy ở cổng", port);
+  console.log("Server is running in port", port);
 });
