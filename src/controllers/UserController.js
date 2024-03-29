@@ -5,7 +5,7 @@ const createUser = async (req, res) => {
     const { name, email, password, comfirmPassword, phone } = req.body;
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const isCheckEmail = reg.test(email);
-    if (!name || !email || !password || !comfirmPassword || !phone) {
+    if (!email || !password || !comfirmPassword) {
       return res.status(200).json({
         status: "ERROR",
         message: "The input is required",
@@ -32,10 +32,10 @@ const createUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { name, email, password, comfirmPassword, phone } = req.body;
+    const { email, password } = req.body;
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const isCheckEmail = reg.test(email);
-    if (!name || !email || !password || !comfirmPassword || !phone) {
+    if (!email || !password) {
       return res.status(200).json({
         status: "ERROR",
         message: "The input is required",
@@ -44,11 +44,6 @@ const loginUser = async (req, res) => {
       return res.status(200).json({
         status: "ERROR",
         message: "The input is email",
-      });
-    } else if (password !== comfirmPassword) {
-      return res.status(200).json({
-        status: "ERROR",
-        message: "The password is equal confirmPassword",
       });
     }
     const response = await UserService.loginUser(req.body);

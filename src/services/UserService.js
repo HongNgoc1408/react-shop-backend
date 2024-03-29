@@ -1,9 +1,9 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
-const {
-  genneralAccessToken,
-  genneralRefreshToken,
-} = require("../services/JwtService");
+// const {
+//   genneralAccessToken,
+//   genneralRefreshToken,
+// } = require("../services/JwtService");
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
@@ -15,18 +15,24 @@ const createUser = (newUser) => {
       });
       if (checkUserEmail !== null) {
         resolve({
-          status: "Email exist",
+          status: "ERROR",
           message: "The email is already",
         });
+      } else if (password !== comfirmPassword) {
+        return res.status(200).json({
+          status: "ERROR",
+          message: "The password is equal confirmPassword",
+        });
       }
+
       const hash = bcrypt.hashSync(password, 10);
       const createdUser = await User.create({
         name,
         email,
         password: hash,
-        comfirmPassword: hash,
         phone,
       });
+
       if (createdUser) {
         resolve({
           status: "User",
@@ -42,7 +48,7 @@ const createUser = (newUser) => {
 
 const loginUser = (userLogin) => {
   return new Promise(async (resolve, reject) => {
-    const { name, email, password, comfirmPassword, phone } = userLogin;
+    const { email, password } = userLogin;
 
     try {
       const checkUserEmail = await User.findOne({
@@ -50,7 +56,7 @@ const loginUser = (userLogin) => {
       });
       if (checkUserEmail === null) {
         resolve({
-          status: "Email no exist",
+          status: "ERROR",
           message: "The user is not defined",
         });
       }
@@ -61,28 +67,28 @@ const loginUser = (userLogin) => {
 
       if (!comparePassword) {
         resolve({
-          status: "OK",
+          status: "ERROR",
           message: "The password or email is incorrect",
         });
       }
-      const access_token = await genneralAccessToken({
-        id: checkUserEmail.id,
-        isAdmin: checkUserEmail.isAdmin,
-      });
+      // const access_token = await genneralAccessToken({
+      //   id: checkUserEmail.id,
+      //   isAdmin: checkUserEmail.isAdmin,
+      // });
 
-      const refresh_token = await genneralRefreshToken({
-        id: checkUserEmail.id,
-        isAdmin: checkUserEmail.isAdmin,
-      });
+      // const refresh_token = await genneralRefreshToken({
+      //   id: checkUserEmail.id,
+      //   isAdmin: checkUserEmail.isAdmin,
+      // });
 
-      console.log("access_token", access_token);
-      console.log("refresh_token", refresh_token);
+      // console.log("access_token", access_token);
+      // console.log("refresh_token", refresh_token);
 
       resolve({
         status: "User",
         message: "Login success",
-        access_token,
-        refresh_token,
+        // access_token,
+        // refresh_token,
       });
     } catch (e) {
       reject(e);
@@ -96,7 +102,7 @@ const updateUser = (id, data) => {
       const checkUserEmail = await User.findOne({ _id: id });
       if (checkUserEmail === null) {
         resolve({
-          status: "Email no exist",
+          status: "ERROR",
           message: "The user is not defined",
         });
       }
@@ -120,7 +126,7 @@ const deleteUser = (id) => {
       const checkUserEmail = await User.findOne({ _id: id });
       if (checkUserEmail === null) {
         resolve({
-          status: "Email no exist",
+          status: "ERROR",
           message: "The user is not defined",
         });
       }
@@ -157,7 +163,7 @@ const getUser = (id) => {
       const user = await User.findOne({ _id: id });
       if (user === null) {
         resolve({
-          status: "Email no exist",
+          status: "ERROR",
           message: "The user is not defined",
         });
       }
