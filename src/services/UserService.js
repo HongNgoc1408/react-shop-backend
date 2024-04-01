@@ -1,14 +1,11 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
-// const {
-//   genneralAccessToken,
-//   genneralRefreshToken,
-// } = require("../services/JwtService");
+const { genneralAccessToken, genneralRefreshToken } = require("./JwtService");
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
-    const { name, email, password, comfirmPassword, phone } = newUser;
-
+    const { name, email, password, comfirmPassword } = newUser;
+    console.log(newUser);
     try {
       const checkUserEmail = await User.findOne({
         email: email,
@@ -19,7 +16,7 @@ const createUser = (newUser) => {
           message: "The email is already",
         });
       } else if (password !== comfirmPassword) {
-        return res.status(200).json({
+        return res.status(400).json({
           status: "ERROR",
           message: "The password is equal confirmPassword",
         });
@@ -30,15 +27,16 @@ const createUser = (newUser) => {
         name,
         email,
         password: hash,
-        phone,
       });
 
       if (createdUser) {
         resolve({
-          status: "User",
-          message: "Create success",
+          status: "OK",
+          message: "SUCCESS",
           data: createdUser,
         });
+      } else {
+        console.log("Error");
       }
     } catch (e) {
       reject(e);
@@ -71,24 +69,24 @@ const loginUser = (userLogin) => {
           message: "The password or email is incorrect",
         });
       }
-      // const access_token = await genneralAccessToken({
-      //   id: checkUserEmail.id,
-      //   isAdmin: checkUserEmail.isAdmin,
-      // });
+      const access_token = await genneralAccessToken({
+        id: checkUserEmail.id,
+        isAdmin: checkUserEmail.isAdmin,
+      });
 
-      // const refresh_token = await genneralRefreshToken({
-      //   id: checkUserEmail.id,
-      //   isAdmin: checkUserEmail.isAdmin,
-      // });
+      const refresh_token = await genneralRefreshToken({
+        id: checkUserEmail.id,
+        isAdmin: checkUserEmail.isAdmin,
+      });
 
-      // console.log("access_token", access_token);
-      // console.log("refresh_token", refresh_token);
+      console.log("access_token", access_token);
+      console.log("refresh_token", refresh_token);
 
       resolve({
-        status: "User",
-        message: "Login success",
-        // access_token,
-        // refresh_token,
+        status: "OK",
+        message: "SUCCESS",
+        access_token,
+        refresh_token,
       });
     } catch (e) {
       reject(e);
@@ -110,8 +108,8 @@ const updateUser = (id, data) => {
       const updateUser = await User.findByIdAndUpdate(id, data, { new: true });
       console.log("updateUser", updateUser);
       resolve({
-        status: "User",
-        message: "Update success",
+        status: "OK",
+        message: "SUCCESS",
         data: updateUser,
       });
     } catch (e) {
@@ -133,8 +131,8 @@ const deleteUser = (id) => {
 
       await User.findByIdAndDelete(id);
       resolve({
-        status: "User",
-        message: "Delete success",
+        status: "OK",
+        message: "SUCCESS",
       });
     } catch (e) {
       reject(e);
@@ -147,8 +145,8 @@ const getAllUser = () => {
     try {
       const allUser = await User.find();
       resolve({
-        status: "User",
-        message: "Fetch all user",
+        status: "OK",
+        message: "SUCCESS",
         data: allUser,
       });
     } catch (e) {
@@ -169,8 +167,8 @@ const getUser = (id) => {
       }
 
       resolve({
-        status: "User",
-        message: "Fetch success",
+        status: "OK",
+        message: "SUCCESS",
         data: user,
       });
     } catch (e) {

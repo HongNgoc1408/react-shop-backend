@@ -4,14 +4,19 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const router = require("./src/router");
 const bodyParser = require("body-parser");
+
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
-// app.use(express.json());
+app.use(express.json());
 app.use(bodyParser.json());
+
+app.use("/message", (req, res) => {
+  res.json({ message: "Hello from server!" });
+});
 
 router(app);
 
