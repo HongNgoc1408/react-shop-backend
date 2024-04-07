@@ -17,7 +17,7 @@ const createUser = async (req, res) => {
         message: "The input is email",
       });
     } else if (password !== comfirmPassword) {
-      return res.status(400).json({
+      return res.json({
         status: "ERROR",
         message: "The password is equal confirmPassword",
       });
@@ -56,6 +56,25 @@ const loginUser = async (req, res) => {
       path: "/",
     });
     return res.status(200).json({ ...newReponse, refresh_token });
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
+const refreshToken = async (req, res) => {
+  console.log("req-cookies", req.cookies);
+  try {
+    let token = req.headers.token.split(" ")[1];
+    if (!token) {
+      return res.status(400).json({
+        status: "ERROR",
+        message: "The token is required",
+      });
+    }
+    const response = await JwtService.refreshTokenJwtService(token);
+    return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
       message: e,
@@ -132,6 +151,7 @@ const getUser = async (req, res) => {
 module.exports = {
   createUser,
   loginUser,
+  refreshToken,
   updateUser,
   deleteUser,
   getAllUser,

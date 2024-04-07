@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const router = require("./src/router");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
@@ -13,10 +14,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
-
-app.use("/message", (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
+app.use(cookieParser());
 
 router(app);
 

@@ -79,9 +79,6 @@ const loginUser = (userLogin) => {
         isAdmin: checkUserEmail.isAdmin,
       });
 
-      console.log("access_token", access_token);
-      console.log("refresh_token", refresh_token);
-
       resolve({
         status: "OK",
         message: "SUCCESS",
