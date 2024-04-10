@@ -8,7 +8,7 @@ const genneralAccessToken = async (payload) => {
       ...payload,
     },
     process.env.ACCESS_TOKEN,
-    { expiresIn: "30s" }
+    { expiresIn: "30d" }
   );
 
   return access_token;
@@ -20,7 +20,7 @@ const genneralRefreshToken = async (payload) => {
       ...payload,
     },
     process.env.REFRESH_TOKEN,
-    { expiresIn: "365d" }
+    { expiresIn: "30d" }
   );
 
   return refresh_token;
@@ -31,6 +31,7 @@ const refreshTokenJwtService = (token) => {
     try {
       jwt.verify(token, process.env.REFRESH_TOKEN, async (err, user) => {
         if (err) {
+          console.log("err", err);
           resolve({
             status: "ERROR",
             message: "The authemtication",

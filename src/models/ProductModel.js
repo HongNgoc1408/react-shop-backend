@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     countInStock: { type: Number, required: true }, //So luong san pham trong kho
     description: { type: String, required: true },
+    status: { type: String },
     rating: { type: Number },
     discount: { type: Number },
     selled: { type: Number },

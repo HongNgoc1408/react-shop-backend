@@ -55,6 +55,7 @@ const loginUser = async (req, res) => {
       sameSite: "strict",
       path: "/",
     });
+    // console.log("refresh_token", refresh_token);
     return res.status(200).json({ ...newReponse, refresh_token });
   } catch (e) {
     return res.status(404).json({
@@ -64,9 +65,10 @@ const loginUser = async (req, res) => {
 };
 
 const refreshToken = async (req, res) => {
-  console.log("req-cookies", req.cookies);
+  console.log("req.cookies.refresh_token", req.cookies.refresh_token);
   try {
-    let token = req.headers.token.split(" ")[1];
+    const token = req.cookies.refresh_token;
+    console.log("token", token);
     if (!token) {
       return res.status(400).json({
         status: "ERROR",
@@ -82,8 +84,22 @@ const refreshToken = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const logoutUser = async (req, res) => {
   try {
+    res.clearCookie("refresh_token");
+    return res.status(200).json({
+      status: "OK",
+      message: "Logout successfully",
+    });
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {    
     const userId = req.params.id;
     const data = req.body;
     if (!userId) {
@@ -156,4 +172,5 @@ module.exports = {
   deleteUser,
   getAllUser,
   getUser,
+  logoutUser,
 };
