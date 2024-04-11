@@ -8,8 +8,9 @@ const createProduct = async (req, res) => {
       type,
       countInStock,
       price,
-      //   rating,
       description,
+      status,
+      //   rating,
       //   discount,
     } = req.body;
     if (
@@ -17,7 +18,9 @@ const createProduct = async (req, res) => {
       !image ||
       !type ||
       !countInStock ||
-      !price
+      !price ||
+      !status ||
+      !description
       //  || !rating ||
       //   !discount
     ) {

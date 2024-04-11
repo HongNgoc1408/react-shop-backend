@@ -90,6 +90,59 @@ const loginUser = (userLogin) => {
     }
   });
 };
+const loginAdmin = (userLogin) => {
+  return new Promise(async (resolve, reject) => {
+    const { email, password } = userLogin;
+
+    try {
+      const checkUserEmail = await User.findOne({
+        email: email,
+      });
+      if (checkUserEmail === null) {
+        resolve({
+          status: "ERROR",
+          message: "The user is not defined",
+        });
+      }
+      if (checkUserEmail.isAdmin === false) {
+        resolve({
+          status: "ERROR",
+          message: "User is not authorized.",
+        });
+      }
+      const comparePassword = bcrypt.compareSync(
+        password,
+        checkUserEmail.password
+      );
+
+      if (!comparePassword) {
+        resolve({
+          status: "ERROR",
+          message: "The password or email is incorrect",
+        });
+      }
+
+      const access_token = await genneralAccessToken({
+        id: checkUserEmail.id,
+        isAdmin: checkUserEmail.isAdmin,
+      });
+
+      // const refresh_token = await genneralRefreshToken({
+      //   id: checkUserEmail.id,
+      //   isAdmin: checkUserEmail.isAdmin,
+      // });
+
+      resolve({
+        status: "OK",
+        message: "SUCCESS",
+        access_token,
+        // refresh_token,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 
 const updateUser = (id, data) => {
   return new Promise(async (resolve, reject) => {
@@ -177,6 +230,7 @@ const getUser = (id) => {
 module.exports = {
   createUser,
   loginUser,
+  loginAdmin,
   updateUser,
   deleteUser,
   getAllUser,
