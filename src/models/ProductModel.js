@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema(
     status: { type: String },
     rating: { type: Number },
     discount: { type: Number },
-    selled: { type: Number },
+    seller: { type: Number }, // so luong da ban
   },
   {
     timestamps: true,

@@ -5,7 +5,7 @@ const { genneralAccessToken, genneralRefreshToken } = require("./JwtService");
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
     const { name, email, password, comfirmPassword } = newUser;
-    console.log(newUser);
+    // console.log(newUser);
     try {
       const checkUserEmail = await User.findOne({
         email: email,
@@ -156,7 +156,7 @@ const updateUser = (id, data) => {
       }
 
       const updateUser = await User.findByIdAndUpdate(id, data, { new: true });
-      console.log("updateUser", updateUser);
+      // console.log("updateUser", updateUser);
       resolve({
         status: "OK",
         message: "SUCCESS",

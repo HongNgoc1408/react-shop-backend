@@ -10,8 +10,8 @@ const createProduct = async (req, res) => {
       price,
       description,
       status,
-      //   rating,
-      //   discount,
+      rating,
+      discount,
     } = req.body;
     if (
       !name ||
@@ -20,9 +20,9 @@ const createProduct = async (req, res) => {
       !countInStock ||
       !price ||
       !status ||
-      !description
-      //  || !rating ||
-      //   !discount
+      !description ||
+      !rating ||
+      !discount
     ) {
       return res.status(200).json({
         status: "ERROR",

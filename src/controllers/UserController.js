@@ -82,7 +82,7 @@ const loginAdmin = async (req, res) => {
       });
     }
     const response = await UserService.loginAdmin(req.body);
-    console.log("response", response);
+    // console.log("response", response);
     // const { refresh_token, ...newReponse } = response;
     // res.cookie("refresh_token", refresh_token, {
     //   httpOnly: true,
@@ -101,10 +101,10 @@ const loginAdmin = async (req, res) => {
 };
 
 const refreshToken = async (req, res) => {
-  console.log("req.cookies.refresh_token", req.cookies.refresh_token);
+  // console.log("req.cookies.refresh_token", req.cookies.refresh_token);
   try {
     const token = req.cookies.refresh_token;
-    console.log("token", token);
+    // console.log("token", token);
     if (!token) {
       return res.status(400).json({
         status: "ERROR",
