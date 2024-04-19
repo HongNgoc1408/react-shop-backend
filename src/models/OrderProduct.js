@@ -29,8 +29,20 @@ const orderSchema = new mongoose.Schema(
     totalPrice: { type: Number, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     isPaid: { type: Boolean, default: false },
+
     paidAt: { type: Date },
-    isDelivered: { type: Boolean, default: false },
+    isDelivered: {
+      type: String,
+      enum: [
+        "Wait for confirmation",
+        "Confirmed",
+        "Order is being delivered",
+        "The order has been delivered",
+        "Cancelled",
+      ],
+      default: "Wait for confirmation",
+    },
+    // isDelivered: { type: Boolean, default: false },
     deliveredAt: { type: Date },
   },
   {

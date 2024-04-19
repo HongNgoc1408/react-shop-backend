@@ -78,9 +78,9 @@ const getAllDetailsOrder = async (req, res) => {
 
 const cancelOrderDetails = async (req, res) => {
   try {
-    const orderId = req.params.id;
-    // console.log("orderId", orderId, req.body);
-    const data = req.body;
+    const orderId = req.body.orderId;
+    // console.log("data", orderId);
+    const data = req.body.orderItems;
     // console.log("data", data);
     if (!orderId) {
       return res.status(400).json({
@@ -98,28 +98,84 @@ const cancelOrderDetails = async (req, res) => {
   }
 };
 
-// const getAllOrder = async (req, res) => {
-//   try {
-//     console.log("req.body", req);
-//     const data = await OrderService.getAllOrder();
-//     return res.status(400).json(data);
-//   } catch (e) {
-//     console.log(e);
-//     return res.status(404).json({
-//       message: e,
-//     });
-//   }
-// };
+const deleteOrderDetails = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+
+    if (!orderId) {
+      return res.status(400).json({
+        status: "ERROR",
+        message: "The orderId is required",
+      });
+    }
+
+    const response = await OrderService.deleteOrderDetails(orderId);
+
+    if (response.status === "ERROR") {
+      return res.status(400).json(response);
+    }
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error("Error in deleteOrderDetails:", error);
+    return res.status(500).json({
+      status: "ERROR",
+      message: "An unexpected error occurred while deleting the order",
+    });
+  }
+};
+
 const getAllOrder = async (req, res) => {
   try {
-    console.log("req.query", req.query); // Sử dụng req.query thay vì req.body
+    console.log("req.query", req.query);
     const data = await OrderService.getAllOrder();
-    return res.status(200).json(data); // Sửa status code thành 200 nếu yêu cầu thành công
+    return res.status(200).json(data);
   } catch (e) {
     console.log(e);
     return res.status(500).json({
-      message: "Internal server error", // Thay vì trả về lỗi cụ thể, bạn có thể trả về một tin nhắn tổng quát
+      message: "Internal server error",
     });
+  }
+};
+
+const updateOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const { isDelivered, isPaid } = req.body;
+    console.log("req.body", req.body);
+
+    // Input validation
+    if (!isDelivered || typeof isDelivered !== "string") {
+      return res.status(400).json({ message: "Invalid request body" });
+    }
+
+    const validStatusValues = [
+      "Wait for confirmation",
+      "Confirmed",
+      "Order is being delivered",
+      "The order has been delivered",
+      "Cancelled",
+    ];
+
+    if (!validStatusValues.includes(isDelivered)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    if (typeof isPaid !== "boolean") {
+      return res.status(400).json({ message: "Invalid isPaid value" });
+    }
+    // Call the service function to update the order
+    const updatedOrder = await OrderService.updateOrder(orderId, {
+      isDelivered,
+      isPaid,
+    });
+
+    // Send response to the client
+    return res.status(200).json(updatedOrder);
+  } catch (error) {
+    // Handle errors
+    console.error("Error updating order:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -129,4 +185,7 @@ module.exports = {
   getAllDetailsOrder,
   cancelOrderDetails,
   getAllOrder,
+  updateOrder,
+  deleteOrderDetails,
+  // deleteOrder,
 };
