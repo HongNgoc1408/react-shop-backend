@@ -127,16 +127,11 @@ const loginAdmin = (userLogin) => {
         isAdmin: checkUserEmail.isAdmin,
       });
 
-      // const refresh_token = await genneralRefreshToken({
-      //   id: checkUserEmail.id,
-      //   isAdmin: checkUserEmail.isAdmin,
-      // });
 
       resolve({
         status: "OK",
         message: "SUCCESS",
         access_token,
-        // refresh_token,
       });
     } catch (e) {
       reject(e);

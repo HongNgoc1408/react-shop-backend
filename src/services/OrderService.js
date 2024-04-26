@@ -194,7 +194,7 @@ const cancelOrderDetails = async (id) => {
 };
 
 const updateOrder = async (orderId, updatedData) => {
-  console.log("updatedData", updatedData);
+  // console.log("updatedData", updatedData);
   try {
     const existingOrder = await Order.findById(orderId);
     if (!existingOrder) {

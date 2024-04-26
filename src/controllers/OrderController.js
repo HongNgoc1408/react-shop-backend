@@ -127,7 +127,7 @@ const deleteOrderDetails = async (req, res) => {
 
 const getAllOrder = async (req, res) => {
   try {
-    console.log("req.query", req.query);
+    // console.log("req.query", req.query);
     const data = await OrderService.getAllOrder();
     return res.status(200).json(data);
   } catch (e) {
@@ -142,7 +142,7 @@ const updateOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
     const { isDelivered, isPaid } = req.body;
-    console.log("req.body", req.body);
+    // console.log("req.body", req.body);
 
     // Input validation
     if (!isDelivered || typeof isDelivered !== "string") {

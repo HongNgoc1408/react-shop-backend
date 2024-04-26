@@ -8,7 +8,6 @@ const router = (app) => {
   app.use("/api/product", ProductRouter);
   app.use("/api/order", OrderRouter);
   app.use("/api/type", TypeRouter);
-  // app.use("/api/payment", PaymentRouter);
 };
 
 module.exports = router;
